@@ -1,0 +1,92 @@
+<snippet>
+    <content><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+    <!-- Web Resources -->
+    <browser:resourceDirectory
+        name="${1:shortname}"
+        directory="resources"
+        />
+
+    <!-- JavaScript for All Pages -->
+    <browser:viewlet
+        name="js-${1:shortname}"
+        paths="/++resource++${1:shortname}/js/${1:shortname}.js"
+        weight="10"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+    <!-- JavaScript for ${3:DeviceClassName} Pages -->
+    <browser:viewlet
+        name="js-${3:DeviceClassName}"
+        paths="/++resource++${1:shortname}/js/${3:DeviceClassName}.js"
+        weight="11"
+        for=".${3:DeviceClassName}.${3:DeviceClassName}"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.public"
+        />
+
+
+    <!-- Router: Provide translation layer between browser and facade. -->
+    <browser:directRouter
+        name="${1:shortname}_router"
+        for="*"
+        class=".api.${2:ShortClassName}Router"
+        namespace="Zenoss.remote"
+        permission="zenoss.View"
+        />
+
+    <!-- API: Facade -->
+    <adapter
+        name="${1:shortname}"
+        provides=".api.I${2:ShortClassName}Facade"
+        for="*"
+        factory=".api.${2:ShortClassName}Facade"
+        />
+
+    <!-- API: Info Adapters go here. -->
+    <adapter
+        provides=".${3:DeviceClassName}.I${3:DeviceClassName}Info"
+        for=".${3:DeviceClassName}.${3:DeviceClassName}"
+        factory=".${3:DeviceClassName}.${3:DeviceClassName}Info"
+        />
+
+
+    <!-- Other custom directives go here. -->
+    $0
+
+
+    <!-- Impact -->
+    <configure zcml:condition="installed ZenPacks.zenoss.Impact">
+        <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
+
+        <!-- Impact directives and adapters go here. -->
+    </configure>
+
+    <!-- Analytics -->
+    <configure zcml:condition="installed ZenPacks.zenoss.ZenETL">
+        <include package="ZenPacks.zenoss.ZenETL" file="meta.zcml"/>
+
+        <!-- Analytics directives and adapters go here. -->
+    </configure>
+
+    <!-- Discovery Mapping -->
+    <configure zcml:condition="installed ZenPacks.zenoss.DiscoveryMapping">
+        <include package="ZenPacks.zenoss.DiscoveryMapping" file="meta.zcml"/>
+
+        <!-- Discovery Mapping directives and adapters go here. -->
+    </configure>
+
+</configure>
+
+]]></content>
+    <tabTrigger>zconfigure</tabTrigger>
+    <scope>text.xml</scope>
+</snippet>

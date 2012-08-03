@@ -1,0 +1,77 @@
+<snippet>
+    <content><![CDATA[
+from zope.component import adapts
+from zope.interface import implements
+
+from Products.ZenModel.Device import Device
+from Products.ZenModel.ZenossSecurity import ZEN_VIEW
+
+from Products.ZenRelations.RelSchema import ToManyCont, ToOne
+
+from Products.Zuul.decorators import info
+from Products.Zuul.form import schema
+from Products.Zuul.infos import ProxyProperty
+from Products.Zuul.infos.device import DeviceInfo
+from Products.Zuul.interfaces.device import IDeviceInfo
+from Products.Zuul.utils import ZuulMessageFactory as _t
+
+
+class ${1:ClassName}(Device):
+    """${1:ClassName} model class."""
+
+    portal_type = meta_type = '${1:ClassName}'
+
+    ${2:attribute} = None
+
+    _properties = Device._properties + (
+        {'id': '${2:attribute}', 'type': '${3:string}', 'mode': 'w'},
+        )
+
+    # _relations = Device._relations + (
+    #     ('custom_components', ToManyCont(ToOne,
+    #         'ZenPacks.namespace.Packname.ComponentModuleName',
+    #         'custom_device'
+    #         )),
+    #     )
+
+    # Meta-data: Zope object views and actions
+    factory_type_information = ({
+        'immediate_view': 'devicedetail',
+        'actions': ({
+            'id': 'perfServer',
+            'name': 'Graphs',
+            'action': 'viewDevicePerformance',
+            'permissions': (ZEN_VIEW,),
+            },),
+        },)
+
+    $0
+
+
+class I${1:ClassName}Info(IDeviceInfo):
+    """${1:ClassName} API info interface."""
+    ${2:attribute} = schema.${5:TextLine}(title=_t(u'${4:Attribute}'))
+
+
+class ${1:ClassName}Info(DeviceInfo):
+    """${1:ClassName} API info adapter factory."""
+
+    implements(I${1:ClassName}Info)
+    adapts(${1:ClassName})
+
+    ${2:attribute} = ProxyProperty('${2:attribute}')
+
+
+# Add this to your ZenPack's main configure.zcml.
+CONFIGURE_ZCML = """
+<adapter
+    provides=".${1:ClassName}.I${1:ClassName}Info"
+    for=".${1:ClassName}.${1:ClassName}"
+    factory=".${1:ClassName}.${1:ClassName}Info"
+    />
+"""
+
+]]></content>
+    <tabTrigger>zdevice</tabTrigger>
+    <scope>source.python</scope>
+</snippet>

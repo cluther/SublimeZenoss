@@ -1,0 +1,80 @@
+<snippet>
+    <content><![CDATA[
+from zope.component import adapts
+from zope.interface import implements
+
+from Products.ZenModel.DeviceComponent import DeviceComponent
+from Products.ZenModel.ManagedEntity import ManagedEntity
+from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE
+
+from Products.ZenRelations.RelSchema import ToManyCont, ToOne
+
+from Products.Zuul.decorators import info
+from Products.Zuul.form import schema
+from Products.Zuul.infos import ProxyProperty
+from Products.Zuul.infos.component import ComponentInfo
+from Products.Zuul.interfaces.component import IComponentInfo
+from Products.Zuul.utils import ZuulMessageFactory as _t
+
+
+class ${1:ClassName}(DeviceComponent, ManagedEntity):
+    """${1:ClassName} model class."""
+
+    portal_type = meta_type = '${1:ClassName}'
+
+    ${2:attribute} = None
+
+    _properties = ManagedEntity._properties + (
+        {'id': '${2:attribute}', 'type': '${3:string}', 'mode': 'w'},
+        )
+
+    # _relations = ManagedEntity._relations + (
+    #     ('custom_device', ToOne(ToManyCont,
+    #         'ZenPacks.namespace.Packname.DeviceModuleName',
+    #         'custom_components'
+    #         )),
+    #     )
+
+    # Meta-data: Zope object views and actions
+    factory_type_information = ({
+        'actions': ({
+            'id': 'perfConf',
+            'name': 'Template',
+            'action': 'objTemplates',
+            'permissions': (ZEN_CHANGE_DEVICE,),
+            },),
+        },)
+
+    def device(self):
+        return self.custom_device()
+
+    $0
+
+
+class I${1:ClassName}Info(IComponentInfo):
+    """${1:ClassName} API info interface."""
+    ${2:attribute} = schema.${5:TextLine}(title=_t(u'${4:Attribute}'))
+
+
+class ${1:ClassName}Info(ComponentInfo):
+    """${1:ClassName} API info adapter factory."""
+
+    implements(I${1:ClassName}Info)
+    adapts(${1:ClassName})
+
+    ${2:attribute} = ProxyProperty('${2:attribute}')
+
+
+# Add this to your ZenPack's main configure.zcml.
+CONFIGURE_ZCML = """
+<adapter
+    provides=".${1:ClassName}.I${1:ClassName}Info"
+    for=".${1:ClassName}.${1:ClassName}"
+    factory=".${1:ClassName}.${1:ClassName}Info"
+    />
+"""
+
+]]></content>
+    <tabTrigger>zcomponent</tabTrigger>
+    <scope>source.python</scope>
+</snippet>
