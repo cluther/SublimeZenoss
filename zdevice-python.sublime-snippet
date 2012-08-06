@@ -64,11 +64,7 @@ class ${1:ClassName}Info(DeviceInfo):
 
 # Add this to your ZenPack's main configure.zcml.
 CONFIGURE_ZCML = """
-<adapter
-    provides=".${1:ClassName}.I${1:ClassName}Info"
-    for=".${1:ClassName}.${1:ClassName}"
-    factory=".${1:ClassName}.${1:ClassName}Info"
-    />
+<adapter factory=".${1:ClassName}.${1:ClassName}Info">
 """
 
 ]]></content>
