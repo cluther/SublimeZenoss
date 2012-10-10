@@ -1,0 +1,15 @@
+<snippet>
+    <content><![CDATA[
+    # Meta-data: Zope object views and actions
+    factory_type_information = ({
+        'actions': ({
+            'id': 'perfConf',
+            'name': 'Template',
+            'action': 'objTemplates',
+            'permissions': (ZEN_CHANGE_DEVICE,),
+            },),
+        },)
+]]></content>
+    <tabTrigger>fti</tabTrigger>
+    <scope>source.python</scope>
+</snippet>
