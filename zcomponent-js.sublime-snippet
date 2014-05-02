@@ -1,23 +1,17 @@
 <snippet>
     <content><![CDATA[
-ZC.registerName('${1:MetaType}', _t('${2:Singular Name}'), _t('${3:Plural Name}'));
-
-ZC.${1:MetaType}GridPanel = Ext.extend(ZC.ComponentGridPanel, {
+ZC.${1:MetaType}Panel = Ext.extend(ZC.${2:ZenPackAbbreviation}ComponentGridPanel, {
     constructor: function(config) {
         config = Ext.applyIf(config || {}, {
             autoExpandColumn: 'name',
             componentType: '${1:MetaType}',
-            sortInfo: {
-                field: 'name',
-                direction: 'ASC',
-            },
             fields: [
                 {name: 'uid'},
                 {name: 'id'},
                 {name: 'title'},
                 {name: 'name'},
                 {name: 'severity'},
-                {name: '${4:attribute}'}
+                {name: '${3:attribute}'},
                 {name: 'monitor'},
                 {name: 'monitored'},
                 {name: 'locking'}
@@ -27,17 +21,16 @@ ZC.${1:MetaType}GridPanel = Ext.extend(ZC.ComponentGridPanel, {
                 dataIndex: 'severity',
                 header: _t('Events'),
                 renderer: Zenoss.render.severity,
-                sortable: true,
                 width: 50
             },{
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
-                sortable: true
+                renderer: Zenoss.render.${2:/./\l/g}_entityLinkFromGrid
             },{
-                id: '${4:attribute}',
-                dataIndex: '${4:attribute}',
-                header: _t('${5:Attribute}'),
+                id: '${3:attribute}',
+                dataIndex: '${3:attribute}',
+                header: _t('${4:Attribute}'),
                 width: 100
             },{
                 id: 'monitored',
@@ -54,10 +47,11 @@ ZC.${1:MetaType}GridPanel = Ext.extend(ZC.ComponentGridPanel, {
             }]
         });
 
-        ZC.${1:MetaType}GridPanel.superclass.constructor.call(this, config);
+        ZC.${1:MetaType}Panel.superclass.constructor.call(this, config);
     }
 });
 
+Ext.reg('${1:MetaType}Panel', ZC.${1:MetaType}Panel);
 ]]></content>
     <tabTrigger>zcomponent</tabTrigger>
     <scope>source.js</scope>
